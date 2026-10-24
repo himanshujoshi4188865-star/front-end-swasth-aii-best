@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwasthyaSathi AI | Healthcare guidance, just a conversation away</title>
+  <!-- Tailwind CSS via CDN for instant preview -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAF9] text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-900">
+
+  <!-- 1. TOP EMERGENCY SAFETY BANNER -->
+  <aside aria-label="Emergency alert" class="bg-red-700 text-white px-4 py-2.5 text-xs sm:text-sm shadow-xs">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="flex h-2.5 w-2.5 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-300 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+        </span>
+        <span class="font-bold tracking-wide">EMERGENCY ALERT:</span>
+        <span class="text-red-100" id="emergency-text">Severe chest pain, heavy bleeding, or breathing difficulty?</span>
+      </div>
+      <a href="tel:112" class="inline-flex items-center gap-2 bg-white text-red-700 hover:bg-red-50 font-bold px-3 py-1 rounded-full text-xs transition-colors shadow-xs">
+        <span>📞 Call 112 Now</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- 2. NAVBAR -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-900/10 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 font-bold">
+          🩺
+        </div>
+        <div>
+          <span class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 flex items-center gap-1.5">
+            SwasthyaSathi <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase">AI</span>
+          </span>
+          <p class="text-[11px] text-slate-500 font-medium hidden sm:block">Public Healthcare Guidance Assistant</p>
+        </div>
+      </div>
+
+      <!-- Controls: Accessibility & Language -->
+      <div class="flex items-center gap-3">
+        <button id="senior-btn" onclick="toggleSeniorMode()" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 flex items-center gap-1.5">
+          <span>👓</span>
+          <span id="senior-btn-text">Senior Mode (A+)</span>
+        </button>
+
+        <div class="flex items-center bg-slate-50 rounded-lg p-1 border border-slate-200">
+          <span class="text-slate-400 pl-2 text-xs">🌐</span>
+          <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs font-bold text-slate-800 py-1 px-2 focus:outline-none cursor-pointer">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="mr">मराठी (Marathi)</option>
+          </select>
+        </div>
+
+        <a href="tel:112" class="hidden sm:inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
+          🚨 112
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 3. HERO SECTION -->
+  <section class="relative overflow-hidden pt-8 pb-14 lg:py-16 bg-gradient-to-b from-white to-[#F3F7F5] border-b border-emerald-900/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-5">
+          
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100/80 text-emerald-900 border border-emerald-200/60">
+            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span id="hero-tag">YOUR HEALTH, YOUR LANGUAGE</span>
+          </div>
+
+          <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.18]">
+            Healthcare guidance, just a conversation away.
+          </h1>
+
+          <p id="hero-sub" class="text-slate-600 leading-relaxed text-base sm:text-lg max-w-2xl font-normal">
+            Speak naturally. Find the right type of care, discover public healthcare services, and understand government scheme information — in a language you're comfortable with.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#chat-section" class="inline-flex items-center gap-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-md shadow-emerald-700/25 hover:shadow-lg hover:-translate-y-0.5">
+              <span class="p-1 rounded-md bg-white/20">🎙️</span>
+              <span id="hero-cta-talk">Talk to SwasthyaSathi</span>
+              <span>→</span>
+            </a>
+
+            <button onclick="openHospitalModal()" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-800 font-semibold px-5 py-3.5 rounded-xl border border-slate-200 transition-all hover:border-slate-300">
+              <span class="text-emerald-700">📍</span>
+              <span id="hero-cta-hospitals">Find Public Hospitals</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 pt-2">
+            <span class="text-emerald-600">✓</span>
+            <span id="hero-trust">Privacy-minded • Source-led • Built for everyone</span>
+          </div>
+        </div>
+
+        <!-- Right Doctor Card with Ambient Glow -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative w-full max-w-md">
+            
+            <div class="absolute -inset-4 bg-gradient-to-r from-emerald-200/50 to-teal-100/50 rounded-full blur-2xl -z-10"></div>
+
+            <div class="relative bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-emerald-100 shadow-xl shadow-emerald-900/5 flex flex-col items-center text-center">
+              
+              <div class="absolute -top-3 -right-3 bg-white border border-emerald-200 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5 animate-bounce">
+                <span>🎙️</span>
+                <span>Voice First AI</span>
+              </div>
+
+              <!-- Avatar -->
+              <div class="w-32 h-32 rounded-full bg-gradient-to-b from-emerald-100 to-teal-50 border-4 border-white shadow-md flex items-center justify-center relative overflow-hidden mb-4">
+                <svg class="w-20 h-20 text-emerald-800" viewBox="0 0 64 64" fill="currentColor">
+                  <circle cx="32" cy="22" r="14" fill="#E2A679" />
+                  <path d="M18 16c0-6 6-10 14-10s14 4 14 10c0 3-1 6-3 8-1-5-6-9-11-9s-10 4-11 9c-2-2-3-5-3-8z" fill="#1e293b" />
+                  <path d="M16 60c0-10 7-18 16-18s16 8 16 18H16z" fill="#047857" />
+                  <path d="M26 42v10c0 3 2 6 6 6s6-3 6-6V42" fill="none" stroke="#f8fafc" stroke-width="3" />
+                  <circle cx="32" cy="56" r="3" fill="#38bdf8" />
+                </svg>
+              </div>
+
+              <h3 class="font-extrabold text-slate-800 text-lg">Dr. Swasthya Companion</h3>
+              <p class="text-xs text-slate-500 max-w-xs mt-1">
+                Ready to guide you to the right care in your native language.
+              </p>
+
+              <div class="mt-4 w-full bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-2.5 flex items-center justify-between text-xs text-emerald-900 font-semibold">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  10+ Indian Languages
+                </span>
+                <span class="text-emerald-700 font-bold">24×7 Free</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. QUICK CARDS ROW -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <a href="#chat-section" class="group bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg hover:border-emerald-400 hover:-translate-y-1 transition-all cursor-pointer flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+            🎙️
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm" id="card1-title">Voice Health Guide</h4>
+            <p class="text-xs text-slate-500 mt-0.5" id="card1-sub">Ask in your own words</p>
+          </div>
+        </div>
+        <span class="text-slate-400 group-hover:text-emerald-600">→</span>
+      </a>
+
+      <div onclick="openHospitalModal()" class="group bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg hover:border-emerald-400 hover:-translate-y-1 transition-all cursor-pointer flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+            🏥
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm" id="card2-title">Government Hospitals</h4>
+            <p class="text-xs text-slate-500 mt-0.5" id="card2-sub">Find care & verified services</p>
+          </div>
+        </div>
+        <span class="text-slate-400 group-hover:text-emerald-600">→</span>
+      </div>
+
+      <div onclick="openSchemeModal()" class="group bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg hover:border-emerald-400 hover:-translate-y-1 transition-all cursor-pointer flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+            📋
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm" id="card3-title">Health Schemes (PM-JAY)</h4>
+            <p class="text-xs text-slate-500 mt-0.5" id="card3-sub">Eligibility & free cards</p>
+          </div>
+        </div>
+        <span class="text-slate-400 group-hover:text-emerald-600">→</span>
+      </div>
+
+      <div onclick="toggleSeniorMode()" class="group bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg hover:border-emerald-400 hover:-translate-y-1 transition-all cursor-pointer flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+            👴
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm" id="card4-title">Senior Citizen Care</h4>
+            <p class="text-xs text-slate-500 mt-0.5" id="card4-sub">Simple, high-contrast support</p>
+          </div>
+        </div>
+        <span class="text-slate-400 group-hover:text-emerald-600">→</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. MAIN CHAT / VOICE SECTION -->
+  <section id="chat-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    
+    <div class="mb-8">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-emerald-700 tracking-wider uppercase">LET'S TALK</span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+          Ready to help
+        </span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+        Your health, in your words.
+      </h2>
+      <p class="text-slate-600 text-sm mt-1">
+        Ask a general health question or get help finding the right medical service.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left: Assistant Interactive Card -->
+      <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
+        
+        <div class="text-center max-w-md mx-auto mb-6">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-100/70 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl shadow-inner mb-3">
+            💚
+          </div>
+          <h3 id="assistant-greeting" class="text-xl font-bold text-slate-900">Namaste! How can I help you today?</h3>
+          <p id="assistant-prompt" class="text-xs text-slate-500 mt-1 font-medium">Tap the microphone to speak, or type your health question below.</p>
+        </div>
+
+        <!-- Suggestion Pills -->
+        <div class="flex flex-wrap justify-center gap-2 mb-6">
+          <button onclick="setQueryText('Which doctor should I consult for stomach pain?')" class="text-xs font-medium bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-slate-700 hover:text-emerald-800 px-3.5 py-2 rounded-xl border border-slate-200 transition-all flex items-center gap-1.5">
+            <span>🩺 Which doctor should I consult for stomach pain? →</span>
+          </button>
+          <button onclick="setQueryText('How do I find an Ayushman Bharat empanelled hospital?')" class="text-xs font-medium bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-slate-700 hover:text-emerald-800 px-3.5 py-2 rounded-xl border border-slate-200 transition-all flex items-center gap-1.5">
+            <span>🏥 Find Ayushman Bharat hospital →</span>
+          </button>
+          <button onclick="setQueryText('What are symptoms of dengue fever?')" class="text-xs font-medium bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-slate-700 hover:text-emerald-800 px-3.5 py-2 rounded-xl border border-slate-200 transition-all flex items-center gap-1.5">
+            <span>🦟 Symptoms of dengue fever →</span>
+          </button>
+        </div>
+
+        <!-- Voice & Text Input Bar -->
+        <div class="relative mb-6">
+          <div id="input-container" class="flex items-center gap-2 bg-slate-50 border-2 border-emerald-500/30 rounded-2xl p-2 transition-all focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-500/10">
+            
+            <!-- Mic button -->
+            <button id="mic-btn" onclick="toggleVoiceRecording()" title="Tap to speak" class="p-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold flex items-center justify-center transition-all shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-4 0h8m-4-18a3 3 0 00-3 3v8a3 3 0 006 0V5a3 3 0 00-3-3z"/>
+              </svg>
+            </button>
+
+            <!-- Text Input -->
+            <input 
+              id="search-input" 
+              type="text" 
+              value="Which doctor should I consult for stomach pain?"
+              placeholder="Ask in Hindi, Marathi, or English..." 
+              class="w-full bg-transparent px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none text-sm sm:text-base font-medium"
+            >
+
+            <!-- Send button -->
+            <button onclick="triggerSearch()" class="p-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl transition-all shadow-sm shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 mt-2">
+            <span>🛡️ Safe & Anonymous Guidance</span>
+            <span id="active-lang-badge">Active: ENGLISH</span>
+          </div>
+        </div>
+
+        <!-- AI Guidance Result Card -->
+        <div id="result-card" class="bg-[#F6FAF8] border border-emerald-200/80 rounded-2xl p-5 sm:p-6 shadow-sm">
+          
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-emerald-200/50">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold">🩺</span>
+              <span class="text-xs font-bold tracking-wider text-emerald-800 uppercase">
+                General Clinical Guidance
+              </span>
+            </div>
+
+            <!-- Audio TTS Button -->
+            <button id="tts-btn" onclick="toggleAudio()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-50 transition-all shadow-2xs">
+              <span id="tts-icon">🔊</span>
+              <span id="tts-text">Listen (Audio)</span>
+            </button>
+          </div>
+
+          <h4 id="response-heading" class="text-base sm:text-lg font-bold text-slate-900 mt-3">
+            A General Medicine clinician may be a reasonable first step
+          </h4>
+
+          <p id="response-body" class="text-slate-700 text-sm leading-relaxed mt-2 font-normal">
+            Stomach pain can have multiple causes, and this AI assistant does not provide a definitive diagnosis. If you experience severe or worsening pain, continuous vomiting, or high fever, seek emergency care immediately. Otherwise, a qualified clinician at a Primary Health Centre (PHC) can assess your condition.
+          </p>
+
+          <!-- Red Flag Warning -->
+          <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-2.5">
+            <span class="text-base shrink-0">⚠️</span>
+            <div>
+              <span class="font-bold">Red Flag Symptoms:</span> Severe sudden pain, continuous vomiting, breathlessness, or black stool require urgent in-person medical evaluation.
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-emerald-200/50 flex flex-wrap items-center justify-between gap-3">
+            <span id="response-sources" class="text-[11px] text-slate-500 font-medium">
+              Source: National Health Mission & MoHFW Clinical Protocols
+            </span>
+            <button onclick="openHospitalModal()" class="text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1">
+              <span>Find Nearest PHC / Hospital</span>
+              <span>→</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right: Sidebar -->
+      <div class="lg:col-span-4 space-y-5">
+        
+        <!-- Emergency Box -->
+        <div class="bg-red-50/90 border-2 border-red-200 rounded-3xl p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="p-2 rounded-xl bg-red-600 text-white text-base">🚨</span>
+            <div>
+              <h4 class="font-extrabold text-red-900 text-base">Need Urgent Help?</h4>
+              <p class="text-[11px] text-red-700 font-medium">Don't wait for an AI reply</p>
+            </div>
+          </div>
+          
+          <p class="text-xs text-red-800 leading-relaxed mb-4">
+            For severe breathing difficulty, sudden chest pressure, heavy bleeding, or loss of consciousness, seek immediate emergency care.
+          </p>
+
+          <a href="tel:112" class="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-black py-3 px-4 rounded-xl shadow-md transition-all text-sm tracking-wide">
+            <span>📞 Call 112 (National Emergency)</span>
+            <span>→</span>
+          </a>
+
+          <p class="text-[10px] text-red-600/90 text-center mt-2.5">
+            Toll-free 24/7 across India. Dispatches ambulance, police & fire.
+          </p>
+        </div>
+
+        <!-- Trust Box -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
+          <div class="flex items-center gap-2 mb-4 text-emerald-800 font-bold text-sm">
+            <span>🛡️</span>
+            <span>Designed Around Trust</span>
+          </div>
+
+          <ul class="space-y-3 text-xs text-slate-600">
+            <li class="flex items-start gap-2.5">
+              <span class="text-emerald-600 font-bold text-sm leading-none mt-0.5">✓</span>
+              <div>
+                <span class="font-bold text-slate-800">Clear Public Sources:</span> All health facts sourced from MoHFW and NHM protocols.
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-emerald-600 font-bold text-sm leading-none mt-0.5">✓</span>
+              <div>
+                <span class="font-bold text-slate-800">No AI Diagnosis:</span> Guides you toward appropriate licensed doctors and public facilities.
+              </div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-emerald-600 font-bold text-sm leading-none mt-0.5">✓</span>
+              <div>
+                <span class="font-bold text-slate-800">Privacy First:</span> No mandatory phone number or Aadhaar login required.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Official Portals -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
+          <div class="flex items-center gap-2 mb-3 text-slate-800 font-bold text-sm">
+            <span>🇮🇳</span>
+            <span>Official Healthcare Services</span>
+          </div>
+
+          <div class="space-y-2">
+            <a href="https://pmjay.gov.in" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-xs font-semibold text-slate-700 hover:text-emerald-800 transition-colors border border-slate-100">
+              <span>Ayushman Bharat (PM-JAY)</span>
+              <span>↗</span>
+            </a>
+            <a href="https://esanjeevani.mohfw.gov.in" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-xs font-semibold text-slate-700 hover:text-emerald-800 transition-colors border border-slate-100">
+              <span>eSanjeevani Teleconsultation</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- 6. FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-800">SwasthyaSathi AI</span>
+        <span>• An accessible public healthcare navigation initiative.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="changeLanguage('en')" class="hover:text-slate-800 font-medium">English</button>
+        <button onclick="changeLanguage('hi')" class="hover:text-slate-800 font-medium">हिंदी</button>
+        <button onclick="changeLanguage('mr')" class="hover:text-slate-800 font-medium">मराठी</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT FOR DYNAMIC LOGIC -->
+  <script>
+    const data = {
+      en: {
+        tag: "YOUR HEALTH, YOUR LANGUAGE",
+        title: "Healthcare guidance, just a conversation away.",
+        sub: "Speak naturally. Find the right type of care, discover public healthcare services, and understand government scheme information — in a language you're comfortable with.",
+        talk: "Talk to SwasthyaSathi",
+        hospitals: "Find Public Hospitals",
+        trust: "Privacy-minded • Source-led • Built for everyone",
+        c1t: "Voice Health Guide", c1s: "Ask in your own words",
+        c2t: "Government Hospitals", c2s: "Find care & verified services",
+        c3t: "Health Schemes (PM-JAY)", c3s: "Eligibility & free cards",
+        c4t: "Senior Citizen Care", c4s: "Simple, high-contrast support",
+        greet: "Namaste! How can I help you today?",
+        prompt: "Tap the microphone to speak, or type your health question below.",
+        inputPh: "Ask in your language (e.g. 'Stomach pain since yesterday')...",
+        doctorH: "A General Medicine clinician may be a reasonable first step",
+        body: "Stomach pain can have multiple causes, and this AI assistant does not provide a definitive diagnosis. If you experience severe or worsening pain, continuous vomiting, or high fever, seek emergency care immediately. Otherwise, a qualified clinician at a Primary Health Centre (PHC) can assess your condition.",
+        sources: "Source: National Health Mission & MoHFW Clinical Protocols"
+      },
+      hi: {
+        tag: "आपका स्वास्थ्य, आपकी भाषा",
+        title: "स्वास्थ्य सलाह, अब सिर्फ एक बातचीत की दूरी पर।",
+        sub: "अपनी भाषा में सहजता से बोलें। सही डॉक्टर चुनें, सरकारी अस्पताल खोजें और आयुष्मान भारत जैसी योजनाओं की जानकारी आसान भाषा में पाएं।",
+        talk: "स्वास्थ्य साथी से बात करें",
+        hospitals: "सरकारी अस्पताल खोजें",
+        trust: "गोपनीयता सुरक्षित • प्रामाणिक स्रोत • सबके लिए सुलभ",
+        c1t: "आवाज से स्वास्थ्य सलाह", c1s: "अपनी बोली में पूछें",
+        c2t: "सरकारी अस्पताल", c2s: "नजदीकी अस्पताल व सुविधाएं",
+        c3t: "स्वास्थ्य योजनाएं (PM-JAY)", c3s: "पात्रता एवं मुफ्त आयुष्मान कार्ड",
+        c4t: "वरिष्ठ नागरिक सेवा", c4s: "सरल और सुलभ सहायता",
+        greet: "नमस्ते! आज मैं आपकी क्या सहायता कर सकता हूँ?",
+        prompt: "बोलने के लिए माइक दबाएं, या नीचे अपना सवाल लिखें।",
+        inputPh: "अपनी भाषा में पूछें (उदा. 'कल से पेट में दर्द है')...",
+        doctorH: "सामान्य चिकित्सा (General Medicine) डॉक्टर से परामर्श उपयुक्त पहला कदम है",
+        body: "पेट दर्द के कई कारण हो सकते हैं, और यह AI सहायक अंतिम निदान नहीं देता। यदि दर्द अत्यधिक तीव्र है, उल्टी में खून है, या तेज बुखार है, तो तुरंत आपातकालीन केंद्र जाएं। अन्यथा नजदीकी प्राथमिक स्वास्थ्य केंद्र में डॉक्टर को दिखाएं।",
+        sources: "स्रोत: राष्ट्रीय स्वास्थ्य मिशन एवं स्वास्थ्य मंत्रालय भारत सरकार"
+      },
+      mr: {
+        tag: "तुमचे आरोग्य, तुमची भाषा",
+        title: "आरोग्य मार्गदर्शन, आता फक्त एका संभाषणाच्या अंतरावर.",
+        sub: "तुमच्या मातृभाषेत सहज बोला. योग्य डॉक्टर शोधा, सरकारी रुग्णालये आणि मोफत आरोग्य योजनांची माहिती मिळवा.",
+        talk: "स्वास्थ्य साथीशी बोला",
+        hospitals: "सरकारी रुग्णालये शोधा",
+        trust: "सुरक्षित व गोपनीय • अधिकृत माहिती • सर्वांसाठी सुलभ",
+        c1t: "व्हॉइस आरोग्य मार्गदर्शक", c1s: "तुमच्या शब्दांत विचारा",
+        c2t: "सरकारी रुग्णालये", c2s: "जवळचे सेवा केंद्र शोधा",
+        c3t: "आरोग्य योजना (PM-JAY)", c3s: "पात्रता व आवश्यक कागदपत्रे",
+        c4t: "ज्येष्ठ नागरिक सेवा", c4s: "सुलभ आणि सोपी मदत",
+        greet: "नमस्कार! मी तुम्हाला कशी मदत करू शकतो?",
+        prompt: "बोलण्यासाठी माईकवर टॅप करा किंवा खाली तुमचा प्रश्न लिहा.",
+        inputPh: "तुमच्या भाषेत विचारा (उदा. 'पोटात दुखत आहे')...",
+        doctorH: "जनरल मेडिसिन डॉक्टरांचा सल्ला घेणे योग्य राहील",
+        body: "पोटदुखीची अनेक कारणे असू शकतात. हा AI सहाय्यक अंतिम निदान करत नाही. तीव्र वेदना किंवा उलट्या होत असल्यास त्वरित रुग्णालयात जा. अन्यथा जवळच्या प्राथमिक आरोग्य केंद्रात (PHC) डॉक्टरांचा सल्ला घ्या.",
+        sources: "स्रोत: राष्ट्रीय आरोग्य अभियान आणि आरोग्य मंत्रालय"
+      }
+    };
+
+    let isSenior = false;
+    let isRecording = false;
+    let isPlayingAudio = false;
+    let currentAudioElement = null;
+    let lastSynthesizedAudioBase64 = null;
+    const API_BASE = 'http://localhost:5000/api';
+
+    function changeLanguage(lang) {
+      document.getElementById('lang-select').value = lang;
+      const l = data[lang] || data.en;
+      document.getElementById('hero-tag').innerText = l.tag;
+      document.getElementById('hero-title').innerText = l.title;
+      document.getElementById('hero-sub').innerText = l.sub;
+      document.getElementById('hero-cta-talk').innerText = l.talk;
+      document.getElementById('hero-cta-hospitals').innerText = l.hospitals;
+      document.getElementById('hero-trust').innerText = l.trust;
+      document.getElementById('card1-title').innerText = l.c1t;
+      document.getElementById('card1-sub').innerText = l.c1s;
+      document.getElementById('card2-title').innerText = l.c2t;
+      document.getElementById('card2-sub').innerText = l.c2s;
+      document.getElementById('card3-title').innerText = l.c3t;
+      document.getElementById('card3-sub').innerText = l.c3s;
+      document.getElementById('card4-title').innerText = l.c4t;
+      document.getElementById('card4-sub').innerText = l.c4s;
+      document.getElementById('assistant-greeting').innerText = l.greet;
+      document.getElementById('assistant-prompt').innerText = l.prompt;
+      document.getElementById('search-input').placeholder = l.inputPh;
+      document.getElementById('response-heading').innerText = l.doctorH;
+      document.getElementById('response-body').innerText = l.body;
+      document.getElementById('response-sources').innerText = l.sources;
+      document.getElementById('active-lang-badge').innerText = 'Active: ' + lang.toUpperCase();
+    }
+
+    function toggleSeniorMode() {
+      isSenior = !isSenior;
+      const body = document.body;
+      const btn = document.getElementById('senior-btn');
+      const btnText = document.getElementById('senior-btn-text');
+      if (isSenior) {
+        body.classList.add('text-lg');
+        btn.classList.add('bg-amber-100', 'border-amber-300', 'text-amber-900');
+        btnText.innerText = 'Large Text: ON';
+      } else {
+        body.classList.remove('text-lg');
+        btn.classList.remove('bg-amber-100', 'border-amber-300', 'text-amber-900');
+        btnText.innerText = 'Senior Mode (A+)';
+      }
+    }
+
+    function setQueryText(text) {
+      document.getElementById('search-input').value = text;
+      triggerSearch();
+    }
+
+    // Toggle Voice Recording with Gnani STT API
+    async function toggleVoiceRecording() {
+      const mic = document.getElementById('mic-btn');
+      const container = document.getElementById('input-container');
+      const input = document.getElementById('search-input');
+      const lang = document.getElementById('lang-select').value;
+      
+      if (!isRecording) {
+        isRecording = true;
+        mic.classList.remove('bg-emerald-700');
+        mic.classList.add('bg-red-600', 'animate-pulse');
+        container.classList.add('border-red-500', 'ring-4', 'ring-red-100');
+        input.value = "Listening to your voice...";
+        
+        try {
+          // Call Backend Gnani STT endpoint
+          const res = await fetch(`${API_BASE}/voice/stt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ languageCode: `${lang}-IN`, format: 'wav' })
+          });
+          const json = await res.json();
+          if (json.success && json.data?.transcript) {
+            input.value = json.data.transcript;
+            triggerSearch();
+          } else {
+            fallbackSimulatedVoice();
+          }
+        } catch (e) {
+          fallbackSimulatedVoice();
+        } finally {
+          isRecording = false;
+          mic.classList.remove('bg-red-600', 'animate-pulse');
+          mic.classList.add('bg-emerald-700');
+          container.classList.remove('border-red-500', 'ring-4', 'ring-red-100');
+        }
+      } else {
+        isRecording = false;
+        mic.classList.remove('bg-red-600', 'animate-pulse');
+        mic.classList.add('bg-emerald-700');
+        container.classList.remove('border-red-500', 'ring-4', 'ring-red-100');
+      }
+    }
+
+    function fallbackSimulatedVoice() {
+      const input = document.getElementById('search-input');
+      const lang = document.getElementById('lang-select').value;
+      input.value = lang === 'hi' 
+        ? "मुझे कल से पेट में बहुत दर्द है" 
+        : (lang === 'mr' ? "माझ्या पोटात दुखत आहे" : "Which doctor should I consult for stomach pain?");
+      triggerSearch();
+    }
+
+    // Toggle Audio Playback with Gnani TTS API
+    async function toggleAudio() {
+      const btn = document.getElementById('tts-btn');
+      const icon = document.getElementById('tts-icon');
+      const text = document.getElementById('tts-text');
+      const heading = document.getElementById('response-heading').innerText;
+      const body = document.getElementById('response-body').innerText;
+      const lang = document.getElementById('lang-select').value;
+
+      if (isPlayingAudio) {
+        if (currentAudioElement) {
+          currentAudioElement.pause();
+          currentAudioElement.currentTime = 0;
+        }
+        isPlayingAudio = false;
+        btn.classList.remove('bg-emerald-700', 'text-white', 'animate-pulse');
+        btn.classList.add('bg-white', 'text-emerald-800');
+        icon.innerText = '🔊';
+        text.innerText = 'Listen (Audio)';
+        return;
+      }
+
+      isPlayingAudio = true;
+      btn.classList.add('bg-emerald-700', 'text-white', 'animate-pulse');
+      btn.classList.remove('bg-white', 'text-emerald-800');
+      icon.innerText = '⏸️';
+      text.innerText = 'Playing Voice...';
+
+      try {
+        let base64Audio = lastSynthesizedAudioBase64;
+        if (!base64Audio) {
+          const res = await fetch(`${API_BASE}/voice/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: `${heading}. ${body}`,
+              languageCode: `${lang}-IN`,
+              gender: 'female'
+            })
+          });
+          const json = await res.json();
+          if (json.success && json.data?.audioBase64) {
+            base64Audio = json.data.audioBase64;
+          }
+        }
+
+        if (base64Audio) {
+          currentAudioElement = new Audio(`data:audio/wav;base64,${base64Audio}`);
+          currentAudioElement.onended = () => {
+            isPlayingAudio = false;
+            btn.classList.remove('bg-emerald-700', 'text-white', 'animate-pulse');
+            btn.classList.add('bg-white', 'text-emerald-800');
+            icon.innerText = '🔊';
+            text.innerText = 'Listen (Audio)';
+          };
+          currentAudioElement.play();
+        } else {
+          setTimeout(() => {
+            isPlayingAudio = false;
+            btn.classList.remove('bg-emerald-700', 'text-white', 'animate-pulse');
+            btn.classList.add('bg-white', 'text-emerald-800');
+            icon.innerText = '🔊';
+            text.innerText = 'Listen (Audio)';
+          }, 3000);
+        }
+      } catch (e) {
+        console.warn('Backend TTS offline, simulating audio toggle:', e);
+        setTimeout(() => {
+          isPlayingAudio = false;
+          btn.classList.remove('bg-emerald-700', 'text-white', 'animate-pulse');
+          btn.classList.add('bg-white', 'text-emerald-800');
+          icon.innerText = '🔊';
+          text.innerText = 'Listen (Audio)';
+        }, 3000);
+      }
+    }
+
+    // Trigger Search & Query Processing with Safety Guardrails
+    async function triggerSearch() {
+      const input = document.getElementById('search-input');
+      const query = input.value.trim();
+      const lang = document.getElementById('lang-select').value;
+      const card = document.getElementById('result-card');
+      card.classList.remove('hidden');
+
+      if (!query) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/chat/query`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query,
+            language: lang,
+            synthesizeVoice: true
+          })
+        });
+
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          document.getElementById('response-heading').innerText = d.recommendation.title;
+          document.getElementById('response-body').innerText = d.recommendation.summary;
+          document.getElementById('response-sources').innerText = d.recommendation.officialSource;
+
+          // Save voice audio if returned
+          if (d.voiceAudio?.audioBase64) {
+            lastSynthesizedAudioBase64 = d.voiceAudio.audioBase64;
+          } else {
+            lastSynthesizedAudioBase64 = null;
+          }
+
+          // Emergency styling if critical red flags detected
+          if (d.safety?.hasRedFlags || d.safety?.triageLevel === 'CRITICAL_EMERGENCY') {
+            card.classList.remove('bg-[#F6FAF8]', 'border-emerald-200/80');
+            card.classList.add('bg-red-50', 'border-red-400', 'ring-2', 'ring-red-300');
+          } else {
+            card.classList.remove('bg-red-50', 'border-red-400', 'ring-2', 'ring-red-300');
+            card.classList.add('bg-[#F6FAF8]', 'border-emerald-200/80');
+          }
+        }
+      } catch (err) {
+        console.warn('Backend call failed, showing local fallback:', err);
+      }
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('search-input')?.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        triggerSearch();
+      }
+    });
+
+    // ----------------------------------------------------
+    // Modal 1: Public & Empanelled Hospitals Locator
+    // ----------------------------------------------------
+    async function openHospitalModal() {
+      let modal = document.getElementById('hospital-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'hospital-modal';
+        modal.className = 'fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4';
+        modal.innerHTML = `
+          <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-[#F8FAF9]">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🏥</span>
+                <div>
+                  <h3 class="font-extrabold text-slate-900 text-base">Public & Empanelled Hospitals</h3>
+                  <p class="text-xs text-slate-500">Verified Primary Health Centres, District Hospitals & PM-JAY facilities</p>
+                </div>
+              </div>
+              <button onclick="closeHospitalModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 font-bold">✕</button>
+            </div>
+            
+            <div class="p-4 bg-white border-b border-slate-100 flex gap-2">
+              <input id="hosp-search-input" type="text" placeholder="Filter by city, department or name..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600">
+              <button onclick="fetchHospitalsList()" class="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold shrink-0">Search</button>
+            </div>
+
+            <div id="hosp-list-container" class="p-5 overflow-y-auto space-y-3.5 flex-1 bg-[#FAFBFB]">
+              <div class="text-center text-xs text-slate-400 py-6">Loading public hospitals from backend...</div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('hosp-search-input').addEventListener('input', (e) => {
+          fetchHospitalsList(e.target.value);
+        });
+      }
+      modal.classList.remove('hidden');
+      fetchHospitalsList();
+    }
+
+    function closeHospitalModal() {
+      const modal = document.getElementById('hospital-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function fetchHospitalsList(query = '') {
+      const container = document.getElementById('hosp-list-container');
+      try {
+        const url = query ? `${API_BASE}/hospitals?search=${encodeURIComponent(query)}` : `${API_BASE}/hospitals`;
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.success && json.data) {
+          container.innerHTML = json.data.map(h => `
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs hover:border-emerald-400 transition-all">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 text-sm">${h.name}</span>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${
+                      h.type === 'PHC' ? 'bg-emerald-100 text-emerald-800' :
+                      h.type === 'CHC' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                    }">${h.type}</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">📍 ${h.address}, ${h.city} (${h.pincode})</p>
+                </div>
+                ${h.isPmjayEmpanelled ? '<span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">PM-JAY Cashless</span>' : ''}
+              </div>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs gap-2">
+                <span class="text-slate-600 font-medium">📞 Helpline: <a href="tel:${h.emergencyHelpline}" class="text-emerald-700 font-bold">${h.emergencyHelpline}</a></span>
+                <span class="text-slate-500">Beds: <b>${h.availableBeds || h.totalBeds}</b> / ${h.totalBeds}</span>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        container.innerHTML = `<div class="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+          Backend offline or starting up. Ensure Node server is running on port 5000.
+        </div>`;
+      }
+    }
+
+    // ----------------------------------------------------
+    // Modal 2: Government Scheme Eligibility Checker
+    // ----------------------------------------------------
+    async function openSchemeModal() {
+      let modal = document.getElementById('scheme-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'scheme-modal';
+        modal.className = 'fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4';
+        modal.innerHTML = `
+          <div class="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-[#F8FAF9]">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">📋</span>
+                <div>
+                  <h3 class="font-extrabold text-slate-900 text-base">Health Scheme Eligibility Checker</h3>
+                  <p class="text-xs text-slate-500">Check eligibility for Ayushman Bharat (PM-JAY) & ₹5L Senior Cover</p>
+                </div>
+              </div>
+              <button onclick="closeSchemeModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 font-bold">✕</button>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-4 flex-1">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Your Age</label>
+                  <input id="elig-age" type="number" value="72" class="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Annual Family Income (₹)</label>
+                  <input id="elig-income" type="number" value="180000" class="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Ration Card Category</label>
+                  <select id="elig-ration" class="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600">
+                    <option value="PriorityHousehold">Priority Household (PHH)</option>
+                    <option value="Antyodaya">Antyodaya Anna Yojana (AAY)</option>
+                    <option value="BPL">BPL Card</option>
+                    <option value="APL">APL / White Card</option>
+                    <option value="None">None</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">State</label>
+                  <select id="elig-state" class="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600">
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="All-India">Other / All-India</option>
+                  </select>
+                </div>
+              </div>
+
+              <button onclick="runEligibilityEvaluation()" class="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-md transition-all">
+                Evaluate My Benefits →
+              </button>
+
+              <div id="elig-results-container" class="space-y-3 pt-2"></div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+      modal.classList.remove('hidden');
+      runEligibilityEvaluation();
+    }
+
+    function closeSchemeModal() {
+      const modal = document.getElementById('scheme-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function runEligibilityEvaluation() {
+      const container = document.getElementById('elig-results-container');
+      const age = parseInt(document.getElementById('elig-age').value, 10);
+      const annualIncome = parseFloat(document.getElementById('elig-income').value);
+      const rationCardType = document.getElementById('elig-ration').value;
+      const state = document.getElementById('elig-state').value;
+
+      container.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">Checking eligibility rules...</div>';
+
+      try {
+        const res = await fetch(`${API_BASE}/schemes/check-eligibility`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ age, annualIncome, rationCardType, state, isBPL: ['PriorityHousehold', 'Antyodaya', 'BPL'].includes(rationCardType) })
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          const { eligibleSchemes, nextSteps } = json.data;
+          container.innerHTML = `
+            <div class="text-xs font-bold text-slate-800 mb-2">Eligible Schemes Found: ${eligibleSchemes.length}</div>
+            ${eligibleSchemes.map(s => `
+              <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3.5 text-xs text-slate-700">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-extrabold text-emerald-950">${s.schemeName}</h4>
+                  <span class="bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Eligible</span>
+                </div>
+                <p class="font-semibold text-emerald-800 mt-1">Coverage: ${s.coverageAmount}</p>
+                <div class="mt-2 text-[11px] text-slate-600">
+                  <b>Required Documents:</b> ${s.requiredDocuments.join(', ')}
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[11px] pt-2 border-t border-emerald-200/50">
+                  <span>Helpline: <b>${s.helpline}</b></span>
+                  <a href="${s.applyUrl}" target="_blank" class="text-emerald-800 font-bold underline">Official Portal ↗</a>
+                </div>
+              </div>
+            `).join('')}
+          `;
+        }
+      } catch (err) {
+        container.innerHTML = `<div class="p-3 bg-red-50 text-red-800 rounded-xl text-xs">Could not connect to backend server on port 5000.</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
